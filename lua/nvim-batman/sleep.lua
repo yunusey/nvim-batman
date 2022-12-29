@@ -18,6 +18,15 @@ M.bat = {
     "                                   \\/                                    "
 }
 
+M.quotes = {
+    "You either die a hero, or you live long enough to see yourself become the villain.",
+    "I am vengeance! I am night! I am Batman!",
+    "It's not who I am underneath, but what I do that defines me...",
+    "You'll hunt me, you'll condemn me. Set the dogs on me. Because that's what needs to happen. (Continues)",
+    "Because sometimes truth isn't good enough. Sometimes people deserve more. Sometimes people deserve to have their faith rewarded.",
+    "I'm whatever Gotham needs me to be, call it in!",
+}
+
 function M.sleepNormal()
     local bat = {}
     for index, value in ipairs(M.bat) do
@@ -35,6 +44,7 @@ function M.sleepNormal()
     local w = vim.api.nvim_win_get_width(M.win)
     M.timer = vim.loop.new_timer()
     local turn = 0
+    local quote_turn = 1
     local i = 0
     local j = 0
     local i_inc = 1
@@ -90,6 +100,13 @@ function M.sleepNormal()
         end
         i = i + i_inc
         j = j + j_inc
+        if turn % 100 == 0 then
+            print(M.quotes[quote_turn])
+            quote_turn = quote_turn + 1
+            if quote_turn == #M.quotes + 1 then
+                quote_turn = 1
+            end
+        end
         turn = turn + 1
     end))
     
@@ -114,6 +131,7 @@ function M.sleepRandom()
     end
     M.timer = vim.loop.new_timer()
     local turn = 0
+    local quote_turn = 1
     vim.api.nvim_buf_set_keymap(buf, 'n', 'q', ':lua require"nvim-batman".stopTimer()<cr>', {noremap=true})
     M.timer:start(0, 1000, vim.schedule_wrap ( function ()
         local i = math.random() * w_range
@@ -136,6 +154,13 @@ function M.sleepRandom()
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, text)
         for index, value in ipairs(text) do
             vim.api.nvim_buf_add_highlight(buf, -1, "ErrorMsg", index - 1, 0, -1)
+        end
+        if turn % 10 == 0 then
+            print(M.quotes[quote_turn])
+            quote_turn = quote_turn + 1
+            if quote_turn == #M.quotes + 1 then
+                quote_turn = 1
+            end
         end
         turn = turn + 1
     end))
