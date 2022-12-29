@@ -1,6 +1,28 @@
 local M = {}
 
-function M.sleep()
+M.bat = {
+    "_____________________                              _____________________ ",
+    "`-._:  .:'   `:::  .:\\           |\\__/|           /::  .:'   `:::  .:.-' ",
+    "    \\      :          \\          |:   |          /         :       /     ",
+    "     \\     ::    .     `-_______/ ::   \\_______-'   .      ::   . /      ",
+    "      |  :   :: ::'  :   :: ::'  :   :: ::'      :: ::'  :   :: :|       ",
+    "      |     ;::         ;::         ;::         ;::         ;::  |       ",
+    "      |  .:'   `:::  .:'   `:::  .:'   `:::  .:'   `:::  .:'   `:|       ",
+    "      /     :           :           :           :           :    \\       ",
+    "     /______::_____     ::    .     ::    .     ::   _____._::____\\      ",
+    "                   `----._:: ::'  :   :: ::'  _.----'                    ",
+    "                          `--.       ;::  .--'                           ",
+    "                              `-. .:'  .-'                               ",
+    "                                 \\    /                                  ",
+    "                                  \\  /                                   ",
+    "                                   \\/                                    "
+}
+
+function M.sleepNormal()
+    local bat = {}
+    for index, value in ipairs(M.bat) do
+        table.insert(bat, value)
+    end
     local buf = vim.api.nvim_create_buf(false, true)
     M.buf = buf
     M.win = vim.api.nvim_open_win(buf, true, {
@@ -12,23 +34,6 @@ function M.sleep()
     local h = vim.api.nvim_win_get_height(M.win)
     local w = vim.api.nvim_win_get_width(M.win)
     M.timer = vim.loop.new_timer()
-    local bat = {
-        "_____________________                              _____________________ ",
-        "`-._:  .:'   `:::  .:\\           |\\__/|           /::  .:'   `:::  .:.-' ",
-        "    \\      :          \\          |:   |          /         :       /     ",
-        "     \\     ::    .     `-_______/ ::   \\_______-'   .      ::   . /      ",
-        "      |  :   :: ::'  :   :: ::'  :   :: ::'      :: ::'  :   :: :|       ",
-        "      |     ;::         ;::         ;::         ;::         ;::  |       ",
-        "      |  .:'   `:::  .:'   `:::  .:'   `:::  .:'   `:::  .:'   `:|       ",
-        "      /     :           :           :           :           :    \\       ",
-        "     /______::_____     ::    .     ::    .     ::   _____._::____\\      ",
-        "                   `----._:: ::'  :   :: ::'  _.----'                    ",
-        "                          `--.       ;::  .--'                           ",
-        "                              `-. .:'  .-'                               ",
-        "                                 \\    /                                  ",
-        "                                  \\  /                                   ",
-        "                                   \\/                                    "
-    }
     local turn = 0
     local i = 0
     local j = 0
@@ -90,10 +95,57 @@ function M.sleep()
     
 end
 
+function M.sleepRandom()
+    local buf = vim.api.nvim_create_buf(false, true)
+    M.buf = buf
+    M.win = vim.api.nvim_open_win(buf, true, {
+            relative='win', row=0, col=0, 
+            width=vim.api.nvim_win_get_width(vim.api.nvim_get_current_win()), 
+            height=vim.api.nvim_win_get_height(vim.api.nvim_get_current_win())
+        }
+    )
+    local h = vim.api.nvim_win_get_height(M.win)
+    local w = vim.api.nvim_win_get_width(M.win)
+    local h_range = h - 15
+    local w_range = w - 80
+    local bat = {}
+    for index, value in ipairs(M.bat) do
+        table.insert(bat, value)
+    end
+    M.timer = vim.loop.new_timer()
+    local turn = 0
+    vim.api.nvim_buf_set_keymap(buf, 'n', 'q', ':lua require"nvim-batman".stopTimer()<cr>', {noremap=true})
+    M.timer:start(0, 1000, vim.schedule_wrap ( function ()
+        local i = math.random() * w_range
+        local j = math.random() * h_range
+        local text = {}
+        for line = 0, j, 1 do
+            table.insert(text, "")
+        end
+        for index, value in ipairs(bat) do
+            local s = ""
+            for line = 0, i, 1 do
+                s = " " .. s
+            end
+            s = s .. value
+            table.insert(text, s)
+        end
+        while #text < h do
+            table.insert(text, "")
+        end
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, text)
+        for index, value in ipairs(text) do
+            vim.api.nvim_buf_add_highlight(buf, -1, "ErrorMsg", index - 1, 0, -1)
+        end
+        turn = turn + 1
+    end))
+    
+end
+
 function M.stopTimer()
     M.timer:stop()
     vim.api.nvim_buf_delete(M.buf, {})
-    vim.cmd(":close")
+    vim.api.nvim_win_close(M.win, true)
 end
 
 return M
