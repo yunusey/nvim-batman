@@ -28,6 +28,8 @@ M.quotes = {
 }
 
 function M.sleepNormal()
+    vim.o.number = false
+    vim.o.relativenumber = false
     local bat = {}
     for index, value in ipairs(M.bat) do
         table.insert(bat, value)
@@ -113,6 +115,8 @@ function M.sleepNormal()
 end
 
 function M.sleepRandom()
+    vim.o.number = false
+    vim.o.relativenumber = false
     local buf = vim.api.nvim_create_buf(false, true)
     M.buf = buf
     M.win = vim.api.nvim_open_win(buf, true, {
