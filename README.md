@@ -54,5 +54,7 @@ E5108: Error executing lua .../pack/packer/start/nvim-batman/lua/nvim-batman/sle
 ```
 Please press Enter. I don't know what the problem is yet, but I know that it's not an important error, at all.
 
+PS: This error is solved with [this commit](https://github.com/yunusey/nvim-batman/commit/dce52746d0c1206ba0a2495974b6e60640e54597). If this error is still occurs, please don't hesitate to create an issue.
+
 # Contribution
 If you'd like to improve the nvim-batman, I'd appreciate it. Please feel free to ask questions. And, please consider answering issues and errors.
