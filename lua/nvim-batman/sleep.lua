@@ -174,7 +174,7 @@ end
 function M.stopTimer()
     M.timer:stop()
     vim.api.nvim_buf_delete(M.buf, {})
-    vim.api.nvim_win_close(M.win, true)
+    -- vim.api.nvim_win_close(M.win, true)
 end
 
 return M
